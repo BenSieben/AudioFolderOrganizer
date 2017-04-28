@@ -20,7 +20,7 @@ def filter_filename_illegal_chars(input_str):
                 filtered_str = filtered_str + c
 
     # Filter out some of the more complex patterns
-    filtered_str = re.sub("[.+]", ".", filtered_str)  # Get rid of multiple periods next to each other
+    filtered_str = re.sub("\.(\.)+", "", filtered_str)  # Get rid of multiple periods next to each other
     return filtered_str
 
 
