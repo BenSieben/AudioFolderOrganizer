@@ -71,7 +71,7 @@ def organize_mp3s_in_folder(folder):
 
             # If there were no errors in folder creation, move MP3 to the organized folder
             if not encountered_error:
-                shutil.copy2(folder_item_with_path, album_path + "/" + folder_item)
+                shutil.move(folder_item_with_path, album_path + "/" + folder_item)
 
 
 # Main method of the script, which checks user input for validity and runs the script
