@@ -19,7 +19,6 @@ KNOWN_AUDIO_FILE_TYPES = [
 # Known illegal characters to have in a file name (on Windows, at least)
 FILENAME_ILLEGAL_CHARS = ["<", ">", ":", "\"", "/", "\\", "|", "?", "*"]
 for i in range(32):
-    print(str(i))
     FILENAME_ILLEGAL_CHARS.append(chr(i))
 
 
@@ -56,6 +55,8 @@ def organize_audio_files_in_folder(folder):
         return
 
     # Loop through all audio files in the directory
+    total_audio_files = 0
+    moved_audio_files = 0
     for folder_item in everything_in_folder:
         folder_item_with_path = folder + "/" + folder_item
         # Make sure the current item is an audio file
@@ -90,11 +91,15 @@ def organize_audio_files_in_folder(folder):
                           " could not be cleaned to a valid directory name")
                     encountered_error = True
 
-            # If there were no errors in folder creation, move audio to the organized folder
+            # If there were no errors in folder creation, move audio to the organized folder and increment moved counter
             if not encountered_error:
                 destination = (album_path + "/" + folder_item)
                 print("Moving " + folder_item + " to " + (album_path + "/" + folder_item))
-                shutil.copy2(folder_item_with_path, destination)
+                shutil.move(folder_item_with_path, destination)
+                moved_audio_files = moved_audio_files + 1
+            total_audio_files = total_audio_files + 1
+
+    print("Done! " + str(moved_audio_files) + " out of " + str(total_audio_files) + " detected audio files were moved")
 
 
 # Main method of the script, which checks user input for validity and runs the script
