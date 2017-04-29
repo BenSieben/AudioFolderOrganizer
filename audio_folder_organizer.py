@@ -13,7 +13,7 @@ import shutil
 def filter_filename_illegal_chars(input_str):
     # Filter out single-bad characters
     filename_illegal_chars = ["<", ">", ":", "\"", "/", "\\", "|", "?", "*"]
-    filtered_str = ""
+    filtered_str = u""
     for c in input_str:
         if c not in filename_illegal_chars:
             if c > 31:  # Character also cannot be in range 0 through 31 besides not being listed illegal characters
@@ -28,7 +28,7 @@ def filter_filename_illegal_chars(input_str):
 def organize_mp3s_in_folder(folder):
     # Check that given folder directory is valid (if not, quit program)
     try:
-        everything_in_folder = os.listdir(folder)
+        everything_in_folder = os.listdir(unicode(folder))  # Unicode to list items with Unicode encoding
     except StandardError, e:
         print str(e)
         return
@@ -38,11 +38,11 @@ def organize_mp3s_in_folder(folder):
         folder_item_with_path = folder + "/" + folder_item
         # Make sure the current item is a .mp3 file
         if os.path.isfile(folder_item_with_path) and \
-                folder_item_with_path.rfind(".mp3") == len(folder_item_with_path) - 4:
+                (folder_item_with_path.rfind(".mp3") == len(folder_item_with_path) - 4):
             # For the MP3 file, grab artist name and album name metadata
             mp3_file = eyed3.load(folder_item_with_path)
-            mp3_file_artist = mp3_file.tag.artist
-            mp3_file_album = mp3_file.tag.album
+            mp3_file_artist = unicode(mp3_file.tag.artist)
+            mp3_file_album = unicode(mp3_file.tag.album)
 
             # Filter out any "bad" characters from artist name / album name
             cleaned_artist = filter_filename_illegal_chars(mp3_file_artist)
@@ -71,7 +71,9 @@ def organize_mp3s_in_folder(folder):
 
             # If there were no errors in folder creation, move MP3 to the organized folder
             if not encountered_error:
-                shutil.move(folder_item_with_path, album_path + "/" + folder_item)
+                destination = (album_path + "/" + folder_item)
+                print "Moving " + folder_item + " to " + (album_path + "/" + folder_item)
+                shutil.copy2(folder_item_with_path, destination)
 
 
 # Main method of the script, which checks user input for validity and runs the script
