@@ -62,8 +62,11 @@ def organize_audio_files_in_folder(folder):
         # Make sure the current item is an audio file
         if os.path.isfile(folder_item_with_path) and is_audio_file(folder_item):
             # For the audio file, grab artist name and album name metadata
+            # If albumartist exists, use it over artist for categorizing the file
             audio_tag = TinyTag.get(folder_item_with_path)
-            audio_file_artist = audio_tag.artist
+            audio_file_artist = audio_tag.albumartist
+            if audio_file_artist is None:
+                audio_file_artist = audio_tag.artist
             audio_file_album = audio_tag.album
 
             # Filter out any "bad" characters from artist name / album name
